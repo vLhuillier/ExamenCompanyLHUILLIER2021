@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:paddingTop="25dp">
+
+    <TextView
+        android:id="@+id/txtCompany"
+        android:paddingStart="25dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="toto"
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+
+</LinearLayout>

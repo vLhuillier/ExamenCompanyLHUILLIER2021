@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <GridLayout
+        android:id="@+id/gridCompanies"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:columnCount="3"
+        android:padding="5dp"
+        tools:context=".ui.home.HomeFragment"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="horizontal">
+            <LinearLayout android:layout_width="match_parent"
+                android:id="@+id/linearLayout1"
+                android:layout_height="wrap_content"
+                tools:ignore="UselessParent">
+                <EditText
+                    android:id="@+id/search_input"
+                    android:layout_weight="1"
+                    android:minLines="1"
+                    android:maxLines="1"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:hint="@string/search_input_placeholder"/>
+                <ImageButton
+                    android:id="@+id/search_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_columnWeight="0"
+                    android:textSize="20sp"
+                    android:src="@drawable/ic_baseline_search_24"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ProgressBar android:id="@+id/prgCompanies"
+            android:visibility="invisible"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lstCompanies"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"/>
+
+    </GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

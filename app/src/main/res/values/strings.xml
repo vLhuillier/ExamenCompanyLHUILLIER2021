@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">EXAMEN_COMPANY_LHUILLIER</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Find My Company</string>
+    <string name="nav_header_subtitle">Examen ESIMED 2021</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="search_input_placeholder">Rechercher une entreprise… (raison sociale, siren, siret)</string>
+    <string name="toolbar_title_company">%s</string>
+    <string name="content_title_company">Information Entreprise: </string>
+    <string name="siren_company">N° Siren: %s</string>
+    <string name="siret_company">N° Siret: %s</string>
+
+    <string name="nic_company">N° Nic: %s</string>
+    <string name="l1_normalisee_company">Adresse: %s</string>
+    <string name="l2_normalisee_company">Complément d\'adresse 1: %s</string>
+    <string name="l3_normalisee_company">Complément d\'adresse 2: %s</string>
+    <string name="l4_normalisee_company">Complément d\'adresse 3: %s</string>
+    <string name="l5_normalisee_company">Complément d\'adresse 4: %s</string>
+    <string name="l6_normalisee_company">Complément d\'adresse 5: %s</string>
+    <string name="l7_normalisee_company">Complément d\'adresse 6: %s</string>
+
+    <string name="menu_home">Accueil</string>
+    <string name="menu_history">Historique</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="title_activity_company">CompanyActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>
