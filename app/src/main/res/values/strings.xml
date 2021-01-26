@@ -12,15 +12,20 @@
     <string name="content_title_company">Information Entreprise: </string>
     <string name="siren_company">N° Siren: %s</string>
     <string name="siret_company">N° Siret: %s</string>
-
     <string name="nic_company">N° Nic: %s</string>
-    <string name="l1_normalisee_company">Adresse: %s</string>
-    <string name="l2_normalisee_company">Complément d\'adresse 1: %s</string>
-    <string name="l3_normalisee_company">Complément d\'adresse 2: %s</string>
-    <string name="l4_normalisee_company">Complément d\'adresse 3: %s</string>
-    <string name="l5_normalisee_company">Complément d\'adresse 4: %s</string>
-    <string name="l6_normalisee_company">Complément d\'adresse 5: %s</string>
-    <string name="l7_normalisee_company">Complément d\'adresse 6: %s</string>
+
+    <string name="l1_normalisized_company">Adresse: %s</string>
+    <string name="l2_normalisized_company">Complément d\'adresse 1: %s</string>
+    <string name="l3_normalisized_company">Complément d\'adresse 2: %s</string>
+    <string name="l4_normalisized_company">Complément d\'adresse 3: %s</string>
+    <string name="l5_normalisized_company">Complément d\'adresse 4: %s</string>
+    <string name="l6_normalisized_company">Complément d\'adresse 5: %s</string>
+    <string name="l7_normalisized_company">Complément d\'adresse 6: %s</string>
+
+    <string name="label_region_company">Région: %s</string>
+    <string name="departement_company">Département: %s</string>
+
+
 
     <string name="menu_home">Accueil</string>
     <string name="menu_history">Historique</string>
