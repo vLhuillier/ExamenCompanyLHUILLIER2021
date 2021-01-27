@@ -15,9 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lhuillier.examen_company_lhuillier.CompanyAdapter
+import com.lhuillier.examen_company_lhuillier.CompanyDatabase
 import com.lhuillier.examen_company_lhuillier.R
 import com.lhuillier.examen_company_lhuillier.service.CompanyService
-import com.lhuillier.examen_lhuillier.data.model.Company
+import com.lhuillier.examen_company_lhuillier.data.model.Company
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
@@ -44,8 +45,6 @@ class HomeFragment : Fragment() {
 
         override fun onPostExecute(result: List<Company>?) {
             if (recyclerView != null) {
-                println("onPostExecute")
-                println(result)
                 recyclerView.adapter = activity?.let { CompanyAdapter(it, result) }
                 recyclerView.visibility = View.VISIBLE
             }
@@ -62,8 +61,12 @@ class HomeFragment : Fragment() {
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val db = activity?.let { CompanyDatabase.getDatabase(it) }
+        val searchHistoryDAO = db?.searchHistoryDao()
 
-        val svc = CompanyService()
+
+
+        val svc = searchHistoryDAO?.let { CompanyService(it) }
 
         var lstCompanies = root.findViewById<RecyclerView>(R.id.lstCompanies)
         lstCompanies.layoutManager = LinearLayoutManager(activity)
@@ -71,7 +74,29 @@ class HomeFragment : Fragment() {
         root.findViewById<ImageButton>(R.id.search_button).setOnClickListener {
             hideKeyboard()
             val query = search_input.text.toString()
-            QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
+
+            activity?.let { it1 -> CompanyDatabase.getDatabase(it1) }?.seed()
+
+            if (svc != null) {
+                QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
+            }
+
+            if (searchHistoryDAO != null) {
+                if (searchHistoryDAO.getBySearchWord(query) == null) {
+                    println("get from api")
+                    if (svc != null) {
+                        QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
+                    }
+                } else {
+                    if (lstCompanies != null) {
+                        println("get from db")
+                        var searchHistory = searchHistoryDAO.getBySearchWord(query)
+                        lstCompanies.adapter = activity?.let { CompanyAdapter(it, searchHistory!!.results) }
+                        lstCompanies.visibility = View.VISIBLE
+                    }
+                }
+            }
+
         }
         /*
         val textView: TextView = root.findViewById(R.id.text_home)

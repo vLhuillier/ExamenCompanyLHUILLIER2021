@@ -14,7 +14,7 @@
     <string name="siret_company">N° Siret: %s</string>
     <string name="nic_company">N° Nic: %s</string>
 
-    <string name="l1_normalisized_company">Adresse: %s</string>
+    <string name="l1_normalisized_company">Raison Sociale: %s</string>
     <string name="l2_normalisized_company">Complément d\'adresse 1: %s</string>
     <string name="l3_normalisized_company">Complément d\'adresse 2: %s</string>
     <string name="l4_normalisized_company">Complément d\'adresse 3: %s</string>

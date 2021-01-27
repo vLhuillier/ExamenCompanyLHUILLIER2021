@@ -11,9 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.lhuillier.examen_company_lhuillier.service.CompanyService
-import com.lhuillier.examen_lhuillier.data.model.Company
+import com.lhuillier.examen_company_lhuillier.data.model.Company
 import kotlinx.android.synthetic.main.content_company.*
-import kotlinx.android.synthetic.main.fragment_home.*
 
 class CompanyActivity : AppCompatActivity() {
 
@@ -31,8 +30,6 @@ class CompanyActivity : AppCompatActivity() {
         }
 
         override fun onPostExecute(result: Company?) {
-
-            println(result)
 
             /* Display Siren */
             val sirenMessage = getString(R.string.siren_company)
@@ -113,12 +110,14 @@ class CompanyActivity : AppCompatActivity() {
         getSupportActionBar()?.setTitle(String.format(textNameLocation, nameLocation))
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        val svc = CompanyService()
+        val db = CompanyDatabase.getDatabase(this)
+        val searchHistoryDAO = db.searchHistoryDao()
+
+        val svc = CompanyService(searchHistoryDAO)
 
         if (company != null) {
             QueryWeatherTask(svc, prgCompany).execute(company.siret)
         }
-
 
         findViewById<FloatingActionButton>(R.id.fabFavorite).setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

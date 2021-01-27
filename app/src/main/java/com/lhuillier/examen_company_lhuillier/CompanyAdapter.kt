@@ -5,8 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lhuillier.examen_company_lhuillier.ui.home.HomeFragment
-import com.lhuillier.examen_lhuillier.data.model.Company
+import com.lhuillier.examen_company_lhuillier.data.model.Company
 
 class CompanyAdapter(val context: Context,
                      private var companiesList:List<Company>?): RecyclerView.Adapter<CompanyViewHolder?>() {

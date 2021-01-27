@@ -1,13 +1,13 @@
-package com.lhuillier.examen_lhuillier.data.tier
+package com.lhuillier.examen_company_lhuillier.data.tier
 
 import androidx.room.*
-import com.lhuillier.examen_lhuillier.data.model.Company
+import com.lhuillier.examen_company_lhuillier.data.model.Company
 
 @Dao
 interface CompanyDAO {
 
     @Query("SELECT * FROM company ORDER BY l1_normalisee")
-    fun getAll(): List<Company>
+    fun getAll(): List<Company?>
 
     @Query("SELECT * FROM company WHERE id=:id")
     fun getById(id: Long): Company?
