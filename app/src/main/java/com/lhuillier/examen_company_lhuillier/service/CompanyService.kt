@@ -1,15 +1,19 @@
 package com.lhuillier.examen_company_lhuillier.service
 
+import android.os.Build
 import android.util.JsonReader
 import android.util.JsonToken
+import androidx.annotation.RequiresApi
 import com.lhuillier.examen_company_lhuillier.data.model.Company
 import com.lhuillier.examen_company_lhuillier.data.model.SearchHistory
 import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryDAO
 import java.io.IOException
 import java.net.URL
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
+
 
 class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
 
@@ -19,6 +23,7 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
     private val searchBySiret = "$apiUrl/siret/"
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCompanies(query: String): List<Company>? {
         var conn: HttpsURLConnection? = null
         val datas: MutableList<Company>? = mutableListOf()
@@ -61,13 +66,13 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
                 */
             }
 
-            val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE)
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE)
             val currentDateandTime: String = sdf.format(Date())
 
             val newHistory = SearchHistory(
-                word = query,
-                results = datas,
-                date = currentDateandTime
+                    word = query,
+                    results = datas,
+                    date = currentDateandTime
             )
             searchHistoryDAO.insert(newHistory)
 
@@ -82,26 +87,26 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
 
     private fun readCompany(reader: JsonReader): Company {
         val company = Company(
-            0, "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "",
-            "", "", "", "",
-            "", false, "", "", "", "",
-            "", "", "", "", "",
-            "", "", "", "", "",
-            "", "", "", "", "", false, "",
-            "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "",
-            "", "", "", "",
-            "", false, "", "", "",
-            "", "", "", "",
-            "", "", "", "",
-            "", "", "",
-            "", "", "",
-            "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", "",
-            "", ""
+                0, "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "",
+                "", "", "", "",
+                "", false, "", "", "", "",
+                "", "", "", "", "",
+                "", "", "", "", "",
+                "", "", "", "", "", false, "",
+                "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "",
+                "", "", "", "",
+                "", false, "", "", "",
+                "", "", "", "",
+                "", "", "", "",
+                "", "", "",
+                "", "", "",
+                "", "", "", "", "",
+                "", "", "", "", "", "", "", "", "", "",
+                "", ""
         )
         reader.beginObject()
         while (reader.hasNext()) {
@@ -145,38 +150,38 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
                 "commune" -> company.commune = reader.nextString()
                 "libelle_commune" -> company.libelle_commune = reader.nextString()
                 "departement_unite_urbaine" -> company.departement_unite_urbaine =
-                    reader.nextString()
+                        reader.nextString()
                 "taille_unite_urbaine" -> company.taille_unite_urbaine = reader.nextString()
                 "numero_unite_urbaine" -> company.numero_unite_urbaine = reader.nextString()
                 "etablissement_public_cooperation_intercommunale" -> company.etablissement_public_cooperation_intercommunale =
-                    reader.nextString()
+                        reader.nextString()
                 "tranche_commune_detaillee" -> company.tranche_commune_detaillee =
-                    reader.nextString()
+                        reader.nextString()
 
                 "zone_emploi" -> company.zone_emploi = reader.nextString()
                 "is_siege" -> company.is_siege = reader.nextString().toBoolean()
                 "enseigne" -> company.enseigne = reader.nextString()
                 "indicateur_champ_publipostage" -> company.indicateur_champ_publipostage =
-                    reader.nextString()
+                        reader.nextString()
                 "statut_prospection" -> company.statut_prospection = reader.nextString()
                 "date_introduction_base_diffusion" -> company.date_introduction_base_diffusion =
-                    reader.nextString()
+                        reader.nextString()
                 "nature_entrepreneur_individuel" -> company.nature_entrepreneur_individuel =
-                    reader.nextString()
+                        reader.nextString()
                 "libelle_nature_entrepreneur_individuel" -> company.libelle_nature_entrepreneur_individuel =
-                    reader.nextString()
+                        reader.nextString()
                 "activite_principale" -> company.activite_principale = reader.nextString()
                 "libelle_activite_principale" -> company.libelle_activite_principale =
-                    reader.nextString()
+                        reader.nextString()
                 "date_validite_activite_principale" -> company.date_validite_activite_principale =
-                    reader.nextString()
+                        reader.nextString()
                 "tranche_effectif_salarie" -> company.tranche_effectif_salarie = reader.nextString()
                 "libelle_tranche_effectif_salarie" -> company.libelle_tranche_effectif_salarie =
-                    reader.nextString()
+                        reader.nextString()
                 "tranche_effectif_salarie_centaine_pret" -> company.tranche_effectif_salarie_centaine_pret =
-                    reader.nextString()
+                        reader.nextString()
                 "date_validite_effectif_salarie" -> company.date_validite_effectif_salarie =
-                    reader.nextString()
+                        reader.nextString()
                 "origine_creation" -> company.origine_creation = reader.nextString()
                 "date_creation" -> company.date_creation = reader.nextString()
                 "date_debut_activite" -> company.date_debut_activite = reader.nextString()
@@ -185,10 +190,10 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
                 "type_magasin" -> company.type_magasin = reader.nextString()
                 "is_saisonnier" -> company.is_saisonnier = reader.nextString().toBoolean()
                 "modalite_activite_principale" -> company.modalite_activite_principale =
-                    reader.nextString()
+                        reader.nextString()
                 "caractere_productif" -> company.caractere_productif = reader.nextString()
                 "participation_particuliere_production" -> company.participation_particuliere_production =
-                    reader.nextString()
+                        reader.nextString()
                 "caractere_auxiliaire" -> company.caractere_auxiliaire = reader.nextString()
                 "nom_raison_sociale" -> company.nom_raison_sociale = reader.nextString()
                 "sigle" -> company.sigle = reader.nextString()
@@ -199,58 +204,58 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
                 "nic_siege" -> company.nic_siege = reader.nextString()
                 "region_siege" -> company.region_siege = reader.nextString()
                 "departement_commune_siege" -> company.departement_commune_siege =
-                    reader.nextString()
+                        reader.nextString()
                 "email" -> company.email = reader.nextString()
 
                 "nature_juridique_entreprise" -> company.nature_juridique_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "libelle_nature_juridique_entreprise" -> company.libelle_nature_juridique_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "activite_principale_entreprise" -> company.activite_principale_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "libelle_activite_principale_entreprise" -> company.libelle_activite_principale_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "date_validite_activite_principale_entreprise" -> company.date_validite_activite_principale_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "activite_principale_registre_metier" -> company.activite_principale_registre_metier =
-                    reader.nextString()
+                        reader.nextString()
 
                 "is_ess" -> company.is_ess = reader.nextString().toBoolean()
                 "date_ess" -> company.date_ess = reader.nextString()
                 "tranche_effectif_salarie_entreprise" -> company.tranche_effectif_salarie_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "libelle_tranche_effectif_salarie_entreprise" -> company.libelle_tranche_effectif_salarie_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "tranche_effectif_salarie_entreprise_centaine_pret" -> company.tranche_effectif_salarie_entreprise_centaine_pret =
-                    reader.nextString()
+                        reader.nextString()
                 "date_validite_effectif_salarie_entreprise" -> company.date_validite_effectif_salarie_entreprise =
-                    reader.nextString()
+                        reader.nextString()
 
                 "categorie_entreprise" -> company.categorie_entreprise = reader.nextString()
                 "date_creation_entreprise" -> company.date_creation_entreprise = reader.nextString()
                 "date_introduction_base_diffusion_entreprise" -> company.date_introduction_base_diffusion_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "indice_monoactivite_entreprise" -> company.indice_monoactivite_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "modalite_activite_principale_entreprise" -> company.modalite_activite_principale_entreprise =
-                    reader.nextString()
+                        reader.nextString()
                 "caractere_productif_entreprise" -> company.caractere_productif_entreprise =
-                    reader.nextString()
+                        reader.nextString()
 
                 "date_validite_rubrique_niveau_entreprise_esa" -> company.date_validite_rubrique_niveau_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "tranche_chiffre_affaire_entreprise_esa" -> company.tranche_chiffre_affaire_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "activite_principale_entreprise_esa" -> company.activite_principale_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "premiere_activite_secondaire_entreprise_esa" -> company.premiere_activite_secondaire_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "deuxieme_activite_secondaire_entreprise_esa" -> company.deuxieme_activite_secondaire_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "troisieme_activite_secondaire_entreprise_esa" -> company.troisieme_activite_secondaire_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
                 "quatrieme_activite_secondaire_entreprise_esa" -> company.quatrieme_activite_secondaire_entreprise_esa =
-                    reader.nextString()
+                        reader.nextString()
 
                 "nature_mise_a_jour" -> company.nature_mise_a_jour = reader.nextString()
                 "indicateur_mise_a_jour_1" -> company.indicateur_mise_a_jour_1 = reader.nextString()
