@@ -28,7 +28,6 @@ class CompanyAdapter(val context: Context,
         /* Show Companies by QuerySearch */
         holder.itemView.setOnClickListener {
             val company: Company = companiesList?.get(position) ?: return@setOnClickListener
-            println("COMPANIES in COMPANY ADAPTER")
             val intent = Intent(context, CompanyActivity::class.java)
             intent.putExtra("company", company)
             context.startActivity(intent)

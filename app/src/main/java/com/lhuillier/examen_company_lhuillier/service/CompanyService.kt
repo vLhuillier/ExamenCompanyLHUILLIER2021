@@ -1,21 +1,23 @@
 package com.lhuillier.examen_company_lhuillier.service
 
-import android.os.Build
 import android.util.JsonReader
 import android.util.JsonToken
-import androidx.annotation.RequiresApi
 import com.lhuillier.examen_company_lhuillier.data.model.Company
 import com.lhuillier.examen_company_lhuillier.data.model.SearchHistory
+import com.lhuillier.examen_company_lhuillier.data.model.SearchHistoryWithCompanies
+import com.lhuillier.examen_company_lhuillier.data.tier.CompanyDAO
 import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryDAO
+import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryWithCompaniesDAO
 import java.io.IOException
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
 
-class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
+class CompanyService(private var searchHistoryDAO: SearchHistoryDAO,
+                     private var companyDAO: CompanyDAO,
+                     private var searchHistoryWithCompaniesDAO: SearchHistoryWithCompaniesDAO) {
 
     private val apiUrl = "https://entreprise.data.gouv.fr/api/sirene/v1"
     private val searchByFullText = "$apiUrl/full_text/"
@@ -23,7 +25,7 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
     private val searchBySiret = "$apiUrl/siret/"
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     fun getCompanies(query: String): List<Company>? {
         var conn: HttpsURLConnection? = null
         val datas: MutableList<Company>? = mutableListOf()
@@ -56,26 +58,42 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
                 }else {
                     reader.skipValue();
                 }
-
             }
 
-            if(datas.isNullOrEmpty()){
-                /*
-                val emptyLocations = Location("0", "Aucun résultats", "Vide", "", "")
-                datas?.add(emptyLocations)
-                */
+            if (datas != null) {
+                /* add search in db */
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE)
+                val currentDateandTime: String = sdf.format(Date())
+                val newSearchHistory = SearchHistory(
+                        word = query,
+                        date = currentDateandTime
+                )
+                newSearchHistory.id = searchHistoryDAO.insert(newSearchHistory)
+
+                /* add companies in db */
+                for(i in datas){
+                    /* Check db to avoid company duplication */
+                    if(companyDAO.getBySiret(i.siret) == null){
+                        i.id = companyDAO.insert(i)
+                    }else{
+                        val companyAlreadyExist =  companyDAO.getBySiret(i.siret)
+                        i.id = companyAlreadyExist!!.id
+                    }
+
+                    /* add SearchHistoryWithCompaniesDAO (joinTable) in db */
+                    val newSearchHistoryWithCompaniesDAO = newSearchHistory.id?.let {
+                        i.id?.let { it1 ->
+                            SearchHistoryWithCompanies(
+                                    company = it1,
+                                    searchHistory = it
+                            )
+                        }
+                    }
+                    if (newSearchHistoryWithCompaniesDAO != null) {
+                        searchHistoryWithCompaniesDAO.insert(newSearchHistoryWithCompaniesDAO)
+                    }
+                }
             }
-
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE)
-            val currentDateandTime: String = sdf.format(Date())
-
-            val newHistory = SearchHistory(
-                    word = query,
-                    results = datas,
-                    date = currentDateandTime
-            )
-            searchHistoryDAO.insert(newHistory)
-
             return datas
         } catch (e: IOException) {
             println("IOException")
@@ -87,7 +105,7 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
 
     private fun readCompany(reader: JsonReader): Company {
         val company = Company(
-                0, "", "", "", "", "", "", "", "",
+                null, "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "", "",
                 "", "", "", "", "", "", "",
@@ -325,5 +343,16 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO) {
         }
     }
 
+    private fun listsEqual(list1: List<Any>, list2: List<Any>): Boolean {
+
+        if (list1.size != list2.size)
+            return false
+
+        val pairList = list1.zip(list2)
+
+        return pairList.all { (elt1, elt2) ->
+            elt1 == elt2
+        }
+    }
 
 }

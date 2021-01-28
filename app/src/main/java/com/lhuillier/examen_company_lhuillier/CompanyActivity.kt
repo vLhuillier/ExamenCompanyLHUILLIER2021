@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.content_company.*
 
 class CompanyActivity : AppCompatActivity() {
 
-    inner class QueryWeatherTask(private val svc: CompanyService,
+    inner class QueryCompanyTask(private val svc: CompanyService,
                                  private val progress: ProgressBar
     ): AsyncTask<String, Void, Company?>() {
 
@@ -102,21 +102,23 @@ class CompanyActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val company = intent.getSerializableExtra("company") as? Company
-        println("company in company ACTIVITY")
-        println(company)
+
+        /* ToolBar settings */
         setSupportActionBar(findViewById(R.id.toolbar))
         val textNameLocation = getString(R.string.toolbar_title_company)
         val nameLocation = company?.l1_normalisee
         getSupportActionBar()?.setTitle(String.format(textNameLocation, nameLocation))
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
-        val db = CompanyDatabase.getDatabase(this)
-        val searchHistoryDAO = db.searchHistoryDao()
 
-        val svc = CompanyService(searchHistoryDAO)
+        val db = CompanyDatabase.getDatabase(this)
+        val searchHistoryDAO = db?.searchHistoryDao()
+        val companyDAO = db?.companyDao()
+        val searchHistoryWithCompaniesDAO = db?.searchHistoryWithCompaniesDAO()
+        val svc = CompanyService(searchHistoryDAO!!, companyDAO!!, searchHistoryWithCompaniesDAO!!)
 
         if (company != null) {
-            QueryWeatherTask(svc, prgCompany).execute(company.siret)
+            QueryCompanyTask(svc, prgCompany).execute(company.siret)
         }
 
         findViewById<FloatingActionButton>(R.id.fabFavorite).setOnClickListener { view ->

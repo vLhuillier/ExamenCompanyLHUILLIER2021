@@ -1,6 +1,8 @@
 package com.lhuillier.examen_company_lhuillier.data.model
 
+import androidx.annotation.NonNull
 import androidx.room.*
+import java.io.Serializable
 
 
 @Entity(
@@ -9,9 +11,8 @@ import androidx.room.*
 data class SearchHistory(@PrimaryKey(autoGenerate = true)
                          var id: Long? = null,
                          var word: String,
-                         var results: List<Company>? = null,
                          var date: String
-            ){
+            ): Serializable {
 
     override fun toString(): String {
         return "$word ($date)"

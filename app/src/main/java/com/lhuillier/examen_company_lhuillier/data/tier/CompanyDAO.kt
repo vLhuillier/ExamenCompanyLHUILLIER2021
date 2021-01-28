@@ -12,6 +12,9 @@ interface CompanyDAO {
     @Query("SELECT * FROM company WHERE id=:id")
     fun getById(id: Long): Company?
 
+    @Query("SELECT * FROM company WHERE siret=:siret")
+    fun getBySiret(siret: String): Company?
+
     @Query("SELECT COUNT(*) FROM company")
     fun count(): Int
 

@@ -4,7 +4,7 @@ import androidx.room.*
 import java.io.Serializable
 
 @Entity(
-    indices = [ Index(value = ["id"], unique = true) ]
+        indices = [ Index(value = ["id"], unique = true) ]
 )
 data class Company (@PrimaryKey(autoGenerate = true)
                    var id                                                 : Long? = null,
@@ -153,6 +153,7 @@ data class Company (@PrimaryKey(autoGenerate = true)
     }
 
     override fun hashCode(): Int {
-        return id.hashCode()
+        return id.hashCode() ?: 0
     }
+
 }

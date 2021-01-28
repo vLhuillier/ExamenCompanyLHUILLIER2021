@@ -4,30 +4,31 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import com.lhuillier.examen_company_lhuillier.data.model.SearchHistory
-import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryDAO
 import com.lhuillier.examen_company_lhuillier.data.model.Company
-import com.lhuillier.examen_company_lhuillier.data.tier.CompanyDAO
-import com.lhuillier.examen_company_lhuillier.data.tier.DataConverter
-import com.lhuillier.examen_company_lhuillier.data.tier.DateConverter
+import com.lhuillier.examen_company_lhuillier.data.model.SearchHistoryWithCompanies
+import com.lhuillier.examen_company_lhuillier.data.tier.*
 import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 
-@Database(version = 3, entities = [Company::class, SearchHistory::class])
-@TypeConverters(*[DataConverter::class, DateConverter::class])
+@Database(version = 1,
+          entities = [Company::class,
+                      SearchHistory::class,
+                      SearchHistoryWithCompanies::class
+                     ]
+        )
 
 abstract class CompanyDatabase: RoomDatabase() {
 
-    abstract fun companyDao(): CompanyDAO;
-    abstract fun searchHistoryDao(): SearchHistoryDAO;
+    abstract fun companyDao(): CompanyDAO
+    abstract fun searchHistoryDao(): SearchHistoryDAO
+    abstract fun searchHistoryWithCompaniesDAO(): SearchHistoryWithCompaniesDAO
 
     fun seed() {
         try {
             if (companyDao().count() == 0 ) {
-
+                /*
                  val c1: Company = Company(
                                 siren = "test",
                                 siret = "test",
@@ -259,7 +260,7 @@ abstract class CompanyDatabase: RoomDatabase() {
                         geo_l5 = "test2"
                 )
                 companyDao().insert(c2)
-
+            */
             }
         } catch (pe: ParseException) {
         }
@@ -270,7 +271,7 @@ abstract class CompanyDatabase: RoomDatabase() {
         @JvmStatic fun getDatabase(context: Context): CompanyDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room
-                        .databaseBuilder(context, CompanyDatabase::class.java, "company.db")
+                        .databaseBuilder(context, CompanyDatabase::class.java, "company3.db")
                         .allowMainThreadQueries()
                         .fallbackToDestructiveMigration()
                         .build()

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
@@ -20,6 +21,9 @@ import com.lhuillier.examen_company_lhuillier.CompanyAdapter
 import com.lhuillier.examen_company_lhuillier.CompanyDatabase
 import com.lhuillier.examen_company_lhuillier.R
 import com.lhuillier.examen_company_lhuillier.data.model.Company
+import com.lhuillier.examen_company_lhuillier.data.model.SearchHistory
+import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryDAO
+import com.lhuillier.examen_company_lhuillier.data.tier.SearchHistoryWithCompaniesDAO
 import com.lhuillier.examen_company_lhuillier.service.CompanyService
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.text.SimpleDateFormat
@@ -71,56 +75,70 @@ class HomeFragment : Fragment() {
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+
         val db = activity?.let { CompanyDatabase.getDatabase(it) }
         val searchHistoryDAO = db?.searchHistoryDao()
-        val svc = searchHistoryDAO?.let { CompanyService(it) }
-        var lstCompanies = root.findViewById<RecyclerView>(R.id.lstCompanies)
+        val companyDAO = db?.companyDao()
+        val searchHistoryWithCompaniesDAO = db?.searchHistoryWithCompaniesDAO()
+        val svc = CompanyService(searchHistoryDAO!!, companyDAO!!, searchHistoryWithCompaniesDAO!!)
+
+        val lstCompanies = root.findViewById<RecyclerView>(R.id.lstCompanies)
         lstCompanies.layoutManager = LinearLayoutManager(activity)
 
         /* Reset Search History after one day */
-        var searcheHistory = searchHistoryDAO?.getAll()
+        val searchHistory = searchHistoryDAO.getAll()
         val currentDateMinusOneDay: LocalDate = LocalDate.now().minusDays(1)
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE)
-        for (i in searcheHistory!!){
+        for (i in searchHistory!!){
             if( sdf.parse(i.date).before(sdf.parse(currentDateMinusOneDay.toString())) ){
-                    searchHistoryDAO!!.delete(i)
+                    searchHistoryDAO.delete(i)
+                    val searchHistoryToDelete = searchHistoryWithCompaniesDAO.getBySearchHistory(i.id!!)
+                for (y in searchHistoryToDelete){
+                    searchHistoryWithCompaniesDAO.delete(y)
+                }
+
             }
         }
 
-        /* Search Company Action */
+        /* Search Company From HistoryFragment */
+        val history = activity?.intent?.getSerializableExtra("history") as? SearchHistory
+        if (history != null) {
+            val searchbar = root.findViewById<EditText>(R.id.search_input)
+            searchbar.setText(history.word)
+            getDatas(searchHistoryDAO, searchHistoryWithCompaniesDAO, svc, lstCompanies,  history.word)
+        }
+
+        /* Search Company Action Button */
         root.findViewById<ImageButton>(R.id.search_button).setOnClickListener {
             hideKeyboard()
             val query = search_input.text.toString()
-            activity?.let { it1 -> CompanyDatabase.getDatabase(it1) }?.seed()
+            getDatas(searchHistoryDAO, searchHistoryWithCompaniesDAO, svc, lstCompanies, query)
+        }
+        return root
+    }
 
-            if (svc != null) {
-                QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
-            }
-
-            if (searchHistoryDAO != null) {
-                if (searchHistoryDAO.getBySearchWord(query) == null) {
-                    println("get from api")
-                    if (svc != null) {
-                        QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
-                    }
-                } else {
-                    if (lstCompanies != null) {
-                        println("get from db")
-                        var searchHistory = searchHistoryDAO.getBySearchWord(query)
-                        lstCompanies.adapter = activity?.let { CompanyAdapter(it, searchHistory!!.results) }
-                        lstCompanies.visibility = View.VISIBLE
-                    }
+    fun getDatas(searchHistoryDAO:SearchHistoryDAO,
+                 searchHistoryWithCompaniesDAO: SearchHistoryWithCompaniesDAO,
+                 svc: CompanyService,
+                 lstCompanies: RecyclerView,
+                 query: String){
+        /* Check db to avoid duplication By Word*/
+        val searchHistory = searchHistoryDAO.getBySearchWord(query)
+        println(searchHistory)
+        if (searchHistory == null) {
+            println("get from api")
+            QueryCompaniesTask(svc, prgCompanies, lstCompanies as RecyclerView).execute(query)
+        } else {
+            println("get from db")
+            val results = searchHistory.id?.let { it1 -> searchHistoryWithCompaniesDAO.getCompaniesBySearchHistory(it1) }
+            println(results)
+            if(results != null){
+                if (lstCompanies != null) {
+                    lstCompanies.adapter = activity?.let { CompanyAdapter(it, results) }
+                    lstCompanies.visibility = View.VISIBLE
                 }
             }
-
         }
-        /*
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-         */
-        return root
     }
 
     fun Fragment.hideKeyboard() {

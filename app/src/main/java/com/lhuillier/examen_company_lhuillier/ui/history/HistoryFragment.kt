@@ -1,4 +1,4 @@
-package com.lhuillier.examen_company_lhuillier.ui.hisotry
+package com.lhuillier.examen_company_lhuillier.ui.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,24 +8,41 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.lhuillier.examen_company_lhuillier.CompanyAdapter
+import com.lhuillier.examen_company_lhuillier.CompanyDatabase
+import com.lhuillier.examen_company_lhuillier.HistoryAdapter
 import com.lhuillier.examen_company_lhuillier.R
+import com.lhuillier.examen_company_lhuillier.service.CompanyService
 
-class historyFragment : Fragment() {
+class HistoryFragment : Fragment() {
 
-    private lateinit var historyViewModel: historyViewModel
+    private lateinit var historyViewModel:HistoryViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        historyViewModel =
-                ViewModelProvider(this).get(historyViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
-        historyViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
+        val root = inflater.inflate(R.layout.fragment_history, container, false)
+
+        val db = activity?.let { CompanyDatabase.getDatabase(it) }
+        val searchHistoryDAO = db?.searchHistoryDao()
+
+        val lstHistory = root.findViewById<RecyclerView>(R.id.lstHistory)
+        lstHistory.layoutManager = LinearLayoutManager(activity)
+
+        var results = searchHistoryDAO?.getAll()
+        println(results)
+        if(results != null){
+            if (lstHistory != null) {
+                lstHistory.adapter = activity?.let { HistoryAdapter(it, results) }
+                lstHistory.visibility = View.VISIBLE
+            }
+        }
+
         return root
     }
 }
