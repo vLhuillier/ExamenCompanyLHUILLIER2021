@@ -138,7 +138,7 @@ data class Company (@PrimaryKey(autoGenerate = true)
         if(departement.isNullOrEmpty()){
             departement = "ND"
         }
-        return String.format("%s (%s)", l1_normalisee, departement )
+        return String.format("%s (%s)", l1_normalisee, code_postal )
     }
 
     override fun equals(other: Any?): Boolean {

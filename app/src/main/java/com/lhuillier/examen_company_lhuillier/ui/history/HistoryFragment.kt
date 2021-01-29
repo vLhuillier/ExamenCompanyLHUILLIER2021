@@ -35,7 +35,7 @@ class HistoryFragment : Fragment() {
         lstHistory.layoutManager = LinearLayoutManager(activity)
 
         var results = searchHistoryDAO?.getAll()
-        println(results)
+
         if(results != null){
             if (lstHistory != null) {
                 lstHistory.adapter = activity?.let { HistoryAdapter(it, results) }

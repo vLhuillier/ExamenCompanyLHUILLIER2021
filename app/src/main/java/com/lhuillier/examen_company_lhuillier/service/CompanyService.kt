@@ -24,14 +24,38 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO,
     private val numberOfResult = "$searchByFullText"
     private val searchBySiret = "$apiUrl/siret/"
 
+    private val searchByPostalCode = "/?code_postal="
+    private val searchByDepartement = "/?departement="
 
 
-    fun getCompanies(query: String): List<Company>? {
+/*
+    var url: URL
+    try {
+        when (filter) {
+            "null" ->
+                url = URL("$searchByFullText${query}?perpage=1")
+            "postal_code" ->
+                url = URL("$searchByFullText${query}?perpage=1")
+        }
+*/
+
+        fun getCompanies(query: String, filterType: String? = null, filterValue: String? = null ): List<Company>? {
         var conn: HttpsURLConnection? = null
         val datas: MutableList<Company>? = mutableListOf()
+        var url = URL("$searchByFullText${query}")
         try {
-            val url = URL("$searchByFullText${query}?perpage=1")
-            println(url)
+            if(filterType != null && filterValue != null ){
+                when (filterType) {
+                    "postal_code" ->
+                        url = URL("$url${searchByPostalCode}${filterValue}&perpage=1")
+                    "departement" ->
+                        url = URL("$url${searchByDepartement}${filterValue}&perpage=1")
+                    else ->
+                        url = URL("$url/?perpage=1")
+                }
+
+            }
+
             conn = url.openConnection() as HttpsURLConnection
             conn.connect()
             val code = conn.responseCode
@@ -96,7 +120,6 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO,
             }
             return datas
         } catch (e: IOException) {
-            println("IOException")
             return datas
         } finally {
             conn?.disconnect()
@@ -304,8 +327,6 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO,
         var company: Company
         try {
             val url = URL("$searchBySiret${siret}")
-            println("url")
-            println(url)
             conn = url.openConnection() as HttpsURLConnection
             conn.connect()
             val code = conn.responseCode
@@ -333,10 +354,8 @@ class CompanyService(private var searchHistoryDAO: SearchHistoryDAO,
                 }
             }
             reader.endObject()
-            println("endArray")
             return null
         } catch (e: IOException) {
-            println("IOException")
             return null
         } finally {
             conn?.disconnect()

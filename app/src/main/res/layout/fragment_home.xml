@@ -44,9 +44,75 @@
             </LinearLayout>
         </LinearLayout>
 
+        <Switch
+            android:id="@+id/switchAdvancedSearch"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:switchMinWidth="56dp"
+            android:text="@string/advancedSearchText"
+            android:checked="false"
+            android:paddingStart="5dp"
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <RadioGroup android:id="@+id/radGroupFilter"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_height="40dp"
+            android:paddingTop="40dp"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+
+            android:layout_width="match_parent">
+            <RadioButton android:id="@+id/radPostalCode"
+                android:text="@string/radioButtonPostalCode"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton android:id="@+id/rad_departement"
+                android:text="@string/radioButtonDepartement"
+                android:checked="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton android:id="@+id/rad_naf"
+                android:text="@string/radioButtonNaf"
+                android:checked="false"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/filterParams"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:layout_row="2"
+            android:layout_column="0">
+            <TextView
+                android:id="@+id/filterKey"
+                android:text="@string/defaultFilterKey"
+                android:layout_marginStart="50dp"
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                />
+            <EditText
+                android:id="@+id/filterValue"
+                android:layout_marginStart="20dp"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+
         <ProgressBar android:id="@+id/prgCompanies"
             android:visibility="invisible"
-            android:layout_row="1"
+            android:layout_row="2"
             android:layout_column="0"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
@@ -56,7 +122,7 @@
             android:id="@+id/lstCompanies"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_row="1"
+            android:layout_row="3"
             android:layout_column="0"
             android:layout_columnWeight="1"/>
 

@@ -6,7 +6,7 @@ import com.lhuillier.examen_company_lhuillier.data.model.SearchHistory
 @Dao
 interface SearchHistoryDAO {
 
-    @Query("SELECT * FROM searchHistory ORDER BY date")
+    @Query("SELECT * FROM searchHistory ORDER BY date DESC")
     fun getAll(): List<SearchHistory>?
 
     @Query("SELECT * FROM searchHistory WHERE id=:id")
